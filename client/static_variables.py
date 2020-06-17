@@ -14,4 +14,4 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 # Game Fonts
-GAME_MAIN_FONT = "AlexandriaFLF.ttf"
+GAME_MAIN_FONT = "images\AlexandriaFLF.ttf"
