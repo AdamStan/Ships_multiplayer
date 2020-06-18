@@ -56,10 +56,17 @@ async def shoot(sid, data):
     correct_target, ship_hit = game.lets_shoot(sid, int(shoot_json['x']), int(shoot_json['y']))
 
     print(ship_hit)
+    # TODO: add wining/losing game
     if game.socket_player_1 == sid:
         await choose_what_should_do(ship_hit=ship_hit, player_hit=game.socket_player_1, player_def=game.socket_player_2)
     elif game.socket_player_2 == sid:
         await choose_what_should_do(ship_hit=ship_hit, player_hit=game.socket_player_2, player_def=game.socket_player_1)
+
+
+@sio.event
+def disconnect(sid):
+     # TODO: send information to user and remove game
+    print('disconnect ', sid)
 
 
 async def choose_what_should_do(ship_hit, player_hit, player_def):
@@ -82,10 +89,6 @@ def find_game(sid):
         if game.socket_player_1 == sid or game.socket_player_2 == sid:
             return game
     return Game(-1)
-
-@sio.event
-def disconnect(sid):
-    print('disconnect ', sid)
 
 
 if __name__ == '__main__':

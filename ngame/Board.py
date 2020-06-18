@@ -19,6 +19,7 @@ class BoardExtended(Board):
         self.initialize_ship()
 
     def initialize_ship(self):
+        # TODO: better ship initialization
         self.set_battleships(BATTLESHIPS)
 
     def set_battleships(self, how_many):
