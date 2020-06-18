@@ -49,11 +49,17 @@ def answer_on_shoot(answer):
 
 
 @sio.event
-def next_shot():
+def next_shoot():
     coordinates = input("Provide coordinates \n")
     coor = coordinates.split(",")
     shoot = Shoot(coor[0], coor[1])
     sio.emit(event="shoot", data=shoot.toJson())
+
+
+@sio.event()
+def opponent_hit():
+    print("Opponent scored")
+    print("Waiting for opponent's move")
 
 
 sio.connect('http://localhost:8080')

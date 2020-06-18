@@ -16,6 +16,7 @@ SUBMARINE = 3
 class BoardExtended(Board):
     def __init__(self):
         super().__init__(BOARD_LENGTH, BOARD_WIDTH)
+        self.initialize_ship()
 
     def initialize_ship(self):
         self.set_battleships(BATTLESHIPS)
@@ -23,6 +24,6 @@ class BoardExtended(Board):
     def set_battleships(self, how_many):
         ship_size = Ship.ShipType.BATTLESHIP.value
         for i in range(how_many):
-            x = randrange(BOARD_LENGTH)
-            y = randrange(BOARD_WIDTH - ship_size)
+            x = randrange(BOARD_LENGTH - ship_size)
+            y = randrange(BOARD_WIDTH)
             self.placeshipat(x, y, VerticalShip(ship_size))

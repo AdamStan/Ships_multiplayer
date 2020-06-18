@@ -16,10 +16,11 @@ class Game:
 
     def lets_shoot(self, sid, x, y):
         if self.socket_player_1 == sid:
-            self.board2.shootat(x, y)
+            values_to_return = self.board2.shootat(x, y)
         else:
-            self.board1.shootat(x, y)
+            values_to_return = self.board1.shootat(x, y)
         print("Board 1")
         GUI.printboard(self.board1)
         print("Board 2")
         GUI.printboard(self.board2)
+        return values_to_return

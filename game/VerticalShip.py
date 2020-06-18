@@ -13,12 +13,12 @@ class VerticalShip(Ship):
                 self._hit[row - self._row] = True
                 if not self.issunk():
                     self._shipsymbols[row - self._row] = self.hitted_ship_symbol
-                    return True, "Hit!"
+                    return True, True
                 else:
                     for i in range(0, len(self._shipsymbols)):
                         self._shipsymbols[i] = self.sunked_ship_symbol
                     print()
-                    return True, "Hit and sink %s" % (self.getshiptype())
+                    return True, True
             else:
                 return False, "You already shot there!"
         else:

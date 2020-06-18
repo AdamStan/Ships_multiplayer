@@ -17,6 +17,7 @@ GAMES = {}
 def connect(sid, environ):
     print("connect ", sid)
 
+
 @sio.event
 async def create_new_game(sid):
     print("creating new game")
@@ -26,7 +27,7 @@ async def create_new_game(sid):
     game = Game(game_id)
     game.socket_player_1 = sid
     GAMES[game_id] = game
-    await sio.emit("answer_on_new_game", data=game_id)
+    await sio.emit("answer_on_new_game", data=game_id, room=sid)
 
 
 @sio.event
@@ -43,7 +44,7 @@ async def join_to_game(sid, game_id):
         await sio.emit("answer_on_join", data=0, room=sid)
         await sio.emit("start_game", data=FIRST, room=game.socket_player_1)
         await sio.emit("start_game", data=SECOND, room=game.socket_player_2)
-        await sio.emit("next_shot", room=game.socket_player_1)
+        await sio.emit("next_shoot", room=game.socket_player_1)
 
 
 @sio.event
@@ -52,14 +53,28 @@ async def shoot(sid, data):
     print("coordinates: ", data)
     game = find_game(sid)
     shoot_json = json.loads(data)
-    game.lets_shoot(sid, int(shoot_json['x']), int(shoot_json['y']))
+    correct_target, ship_hit = game.lets_shoot(sid, int(shoot_json['x']), int(shoot_json['y']))
 
+    print(ship_hit)
     if game.socket_player_1 == sid:
-        await sio.emit("next_shot", room=game.socket_player_2)
+        await choose_what_should_do(ship_hit=ship_hit, player_hit=game.socket_player_1, player_def=game.socket_player_2)
     elif game.socket_player_2 == sid:
-        await sio.emit("next_shot", room=game.socket_player_1)
+        await choose_what_should_do(ship_hit=ship_hit, player_hit=game.socket_player_2, player_def=game.socket_player_1)
 
-    await sio.emit("answer_on_shoot", data="I gained your shot", room=sid)
+
+async def choose_what_should_do(ship_hit, player_hit, player_def):
+    """
+    :param ship_hit: true if ship was hit
+    :param player_hit: player which shoot
+    :param player_def: player which not shoot
+    :return:
+    """
+    if ship_hit is True:
+        await sio.emit("next_shoot", room=player_hit)
+        await sio.emit("opponent_hit", room=player_def)
+    else:
+        await sio.emit("next_shoot", room=player_def)
+        await sio.emit("answer_on_shoot", data="I gained your shot", room=player_hit)
 
 
 def find_game(sid):
