@@ -57,6 +57,9 @@ async def shoot(sid, data):
 
     print(ship_hit)
     # TODO: add wining/losing game
+    if await game_can_be_finished(game):
+        return
+
     if game.socket_player_1 == sid:
         await choose_what_should_do(ship_hit=ship_hit, player_hit=game.socket_player_1, player_def=game.socket_player_2)
     elif game.socket_player_2 == sid:
@@ -64,9 +67,18 @@ async def shoot(sid, data):
 
 
 @sio.event
-def disconnect(sid):
-     # TODO: send information to user and remove game
+async def disconnect(sid):
     print('disconnect ', sid)
+    game = find_game(sid)
+    print("game to remove: ", game)
+    if game is not None:
+        if game.socket_player_1 == sid and game.socket_player_2 is not None:
+            await sio.emit(event="opponent_out", room=game.socket_player_2)
+
+        if game.socket_player_2 == sid and game.socket_player_1 is not None:
+            await sio.emit(event="opponent_out", room=game.socket_player_1)
+
+        GAMES.pop(game.id)
 
 
 async def choose_what_should_do(ship_hit, player_hit, player_def):
@@ -84,11 +96,19 @@ async def choose_what_should_do(ship_hit, player_hit, player_def):
         await sio.emit("answer_on_shoot", data="I gained your shot", room=player_hit)
 
 
+async def game_can_be_finished(game):
+    winner, looser = game.who_win_who_loose()
+    if winner is None:
+        return False
+    await sio.emit(event="win", room=winner)
+    await sio.emit(event="lose", room=looser)
+    return True
+
 def find_game(sid):
     for game in GAMES.values():
         if game.socket_player_1 == sid or game.socket_player_2 == sid:
             return game
-    return Game(-1)
+    return None
 
 
 if __name__ == '__main__':

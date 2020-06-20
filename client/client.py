@@ -62,6 +62,21 @@ def opponent_hit():
     print("Waiting for opponent's move")
 
 
+@sio.event
+def opponent_out():
+    print("Your opponent left, game was closed")
+
+
+@sio.event
+def win():
+    print("You win")
+
+
+@sio.event
+def lose():
+    print("You lose")
+
+
 sio.connect('http://localhost:8080')
 sio.emit(event='connect_to_game')
 

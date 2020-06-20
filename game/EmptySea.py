@@ -25,3 +25,6 @@ class EmptySea(Ship):
                 return False, "You already shoot there !"
         else:
             return False, "You gave wrong shooting coordinates "
+
+    def issunk(self):
+        return True

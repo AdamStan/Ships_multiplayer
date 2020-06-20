@@ -25,3 +25,25 @@ class Game:
         print("Board 2")
         GUI.printboard(self.board2)
         return values_to_return
+
+    def who_win_who_loose(self):
+        """
+        :return: winner and loser (yes, two results)
+        """
+        all_ships_destroyed1 = True
+        for ship_list in self.board1.getships():
+            for ship in ship_list:
+                all_ships_destroyed1 = all_ships_destroyed1 and ship.issunk()
+
+        all_ships_destroyed2 = True
+        for ship_list in self.board2.getships():
+            for ship in ship_list:
+                all_ships_destroyed2 = all_ships_destroyed2 and ship.issunk()
+
+        if all_ships_destroyed1:
+            return self.socket_player_2, self.socket_player_1
+
+        if all_ships_destroyed2:
+            return self.socket_player_1, self.socket_player_2
+
+        return None, None
