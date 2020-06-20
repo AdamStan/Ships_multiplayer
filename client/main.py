@@ -1,8 +1,8 @@
 import pygame
 from pygame.locals import *
-from client.static_variables import GAME_NAME, GAME_MAIN_FONT, BLACK, BLUE, WHITE, \
+from static_variables import GAME_NAME, GAME_MAIN_FONT, BLACK, BLUE, WHITE, \
     YELLOW, SCREEN_WIDTH, SCREEN_HEIGHT
-from .layout.text_functions import text_format
+from layout.text_functions import text_format
 
 # Game Initialization
 pygame.init()
