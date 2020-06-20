@@ -15,7 +15,6 @@ class Game:
         return self.socket_player_1 is not None and self.socket_player_2 is not None
 
     def lets_shoot(self, sid, x, y):
-        # TODO: adding checking if game was over (all ships are destroyed)
         if self.socket_player_1 == sid:
             values_to_return = self.board2.shootat(x, y)
         else:

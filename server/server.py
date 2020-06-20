@@ -56,7 +56,6 @@ async def shoot(sid, data):
     correct_target, ship_hit = game.lets_shoot(sid, int(shoot_json['x']), int(shoot_json['y']))
 
     print(ship_hit)
-    # TODO: add wining/losing game
     if await game_can_be_finished(game):
         return
 
