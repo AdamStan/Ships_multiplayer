@@ -3,10 +3,9 @@ from random import randrange
 from game.Board import Board
 from game.Ship import Ship
 from game.VerticalShip import VerticalShip
-import json
 
-BOARD_LENGTH = 5
-BOARD_WIDTH = 5
+BOARD_LENGTH = 10
+BOARD_WIDTH = 10
 
 BATTLESHIPS = 1
 CRUISER = 2
@@ -65,14 +64,14 @@ class BoardExtended(Board):
             y = randrange(BOARD_WIDTH)
             self.placeshipat(x, y, VerticalShip(ship_size))
 
-    def fields_to_json(self):
+    def fields_to_dict(self):
         dict_json = {}
         for row in range(0, len(self.getships())):
             for column in range(0, len(self.getships()[row])):
                 dict_json[LETTERS_MAP[row] + str(column)] = self.getships()[row][column].tostring(row, column)
-        return json.dumps(dict_json)
+        return dict_json
 
-    def fields_to_json_hide(self):
+    def fields_to_dict_hide(self):
         dict_json = {}
         for row in range(0, len(self.getships())):
             for column in range(0, len(self.getships()[row])):
@@ -83,4 +82,4 @@ class BoardExtended(Board):
                 elif ship_type == "O":
                     type = "O"
                 dict_json[LETTERS_MAP[row] + str(column)] = type
-        return json.dumps(dict_json)
+        return dict_json

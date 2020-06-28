@@ -112,14 +112,17 @@ async def game_can_be_finished(game):
 
 
 async def send_boards(game):
-    json_board_1 = game.board1.fields_to_json()
-    json_board_1_hidden = game.board1.fields_to_json_hide()
-    json_board_2 = game.board2.fields_to_json()
-    json_board_2_hidden = game.board2.fields_to_json_hide()
-    await sio.emit(event="show_my_board", data=json_board_1, room=game.socket_player_1)
-    await sio.emit(event="show_enemy_board", data=json_board_2_hidden, room=game.socket_player_1)
-    await sio.emit(event="show_my_board", data=json_board_2, room=game.socket_player_2)
-    await sio.emit(event="show_enemy_board", data=json_board_1_hidden, room=game.socket_player_2)
+    board_1 = game.board1.fields_to_dict()
+    board_1_hidden = game.board1.fields_to_dict_hide()
+    board_2 = game.board2.fields_to_dict()
+    board_2_hidden = game.board2.fields_to_dict_hide()
+    player_one_data = json.dumps({"enemy_board": board_2_hidden, "my_board": board_1})
+    player_two_data = json.dumps({"enemy_board": board_1_hidden, "my_board": board_2})
+
+    await sio.emit(event="show_boards", data=player_one_data, room=game.socket_player_1)
+    # await sio.emit(event="show_enemy_board", data=json_board_2_hidden, room=game.socket_player_1)
+    # await sio.emit(event="show_my_board", data=json_board_2, room=game.socket_player_2)
+    await sio.emit(event="show_boards", data=player_two_data, room=game.socket_player_2)
 
 
 def find_game(sid):

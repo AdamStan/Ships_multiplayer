@@ -6,6 +6,7 @@ from server.server_variables import FIRST
 from ngame.Board import LETTERS_MAP
 
 sio = socketio.Client()
+PRINTING = False
 
 
 @sio.event
@@ -88,6 +89,19 @@ def show_my_board(data):
 @sio.event
 def show_enemy_board(data):
     enemy_board = json.loads(data)
+    print("Enemy board")
+    show_board(enemy_board)
+
+
+@sio.event
+def show_boards(data):
+    boards = json.loads(data)
+    my_board = boards["my_board"]
+    enemy_board = boards["enemy_board"]
+
+    print("My board")
+    show_board(my_board)
+
     print("Enemy board")
     show_board(enemy_board)
 
