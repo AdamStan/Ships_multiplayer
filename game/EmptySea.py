@@ -28,3 +28,6 @@ class EmptySea(Ship):
 
     def issunk(self):
         return True
+
+    def getshiptype(self):
+        return self.ShipType.EMPTYSEA.name

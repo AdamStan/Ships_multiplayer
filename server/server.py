@@ -120,8 +120,6 @@ async def send_boards(game):
     player_two_data = json.dumps({"enemy_board": board_1_hidden, "my_board": board_2})
 
     await sio.emit(event="show_boards", data=player_one_data, room=game.socket_player_1)
-    # await sio.emit(event="show_enemy_board", data=json_board_2_hidden, room=game.socket_player_1)
-    # await sio.emit(event="show_my_board", data=json_board_2, room=game.socket_player_2)
     await sio.emit(event="show_boards", data=player_two_data, room=game.socket_player_2)
 
 

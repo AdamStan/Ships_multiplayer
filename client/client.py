@@ -6,7 +6,6 @@ from server.server_variables import FIRST
 from ngame.Board import LETTERS_MAP
 
 sio = socketio.Client()
-PRINTING = False
 
 
 @sio.event
