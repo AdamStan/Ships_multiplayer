@@ -44,6 +44,7 @@ async def join_to_game(sid, game_id):
         await sio.emit("answer_on_join", data=0, room=sid)
         await sio.emit("start_game", data=FIRST, room=game.socket_player_1)
         await sio.emit("start_game", data=SECOND, room=game.socket_player_2)
+        await send_boards(game)
         await sio.emit("next_shoot", room=game.socket_player_1)
 
 
@@ -51,11 +52,18 @@ async def join_to_game(sid, game_id):
 async def shoot(sid, data):
     print("user wanna shot", sid)
     print("coordinates: ", data)
+
     game = find_game(sid)
+    if game is None:
+        return
+
     shoot_json = json.loads(data)
-    correct_target, ship_hit = game.lets_shoot(sid, int(shoot_json['x']), int(shoot_json['y']))
+    correct_target, ship_hit = game.lets_shoot(sid, shoot_json['x'], int(shoot_json['y']))
+    print(game.board1.fields_to_json())
 
     print(ship_hit)
+    await send_boards(game)
+
     if await game_can_be_finished(game):
         return
 
@@ -102,6 +110,16 @@ async def game_can_be_finished(game):
     await sio.emit(event="win", room=winner)
     await sio.emit(event="lose", room=looser)
     return True
+
+
+async def send_boards(game):
+    json_board_1 = game.board1.fields_to_json()
+    json_board_2 = game.board2.fields_to_json()
+    await sio.emit(event="show_my_board", data=json_board_1, room=game.socket_player_1)
+    await sio.emit(event="show_enemy_board", data=json_board_2, room=game.socket_player_1)
+    await sio.emit(event="show_my_board", data=json_board_2, room=game.socket_player_2)
+    await sio.emit(event="show_enemy_board", data=json_board_1, room=game.socket_player_2)
+
 
 def find_game(sid):
     for game in GAMES.values():

@@ -1,5 +1,6 @@
 from game import GUI
 from ngame.Board import BoardExtended
+from ngame.Board import VALUES_MAP
 
 
 class Game:
@@ -15,10 +16,11 @@ class Game:
         return self.socket_player_1 is not None and self.socket_player_2 is not None
 
     def lets_shoot(self, sid, x, y):
+        x_value = VALUES_MAP[x]
         if self.socket_player_1 == sid:
-            values_to_return = self.board2.shootat(x, y)
+            values_to_return = self.board2.shootat(x_value, y)
         else:
-            values_to_return = self.board1.shootat(x, y)
+            values_to_return = self.board1.shootat(x_value, y)
         print("Board 1")
         GUI.printboard(self.board1)
         print("Board 2")

@@ -1,4 +1,5 @@
 import socketio
+import json
 
 from ngame.Shoot import Shoot
 from server.server_variables import FIRST
@@ -51,8 +52,7 @@ def answer_on_shoot(answer):
 @sio.event
 def next_shoot():
     coordinates = input("Provide coordinates \n")
-    coor = coordinates.split(",")
-    shoot = Shoot(coor[0], coor[1])
+    shoot = Shoot(coordinates[0], coordinates[1])
     sio.emit(event="shoot", data=shoot.toJson())
 
 
@@ -75,6 +75,20 @@ def win():
 @sio.event
 def lose():
     print("You lose")
+
+
+@sio.event
+def show_my_board(data):
+    my_board = json.loads(data)
+    print("My board")
+    print(my_board)
+
+
+@sio.event
+def show_enemy_board(data):
+    enemy_board = json.loads(data)
+    print("Enemy board")
+    print(enemy_board)
 
 
 sio.connect('http://localhost:8080')
