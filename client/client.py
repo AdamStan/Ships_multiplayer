@@ -3,6 +3,7 @@ import json
 
 from ngame.Shoot import Shoot
 from server.server_variables import FIRST
+from ngame.Board import LETTERS_MAP
 
 sio = socketio.Client()
 
@@ -81,14 +82,14 @@ def lose():
 def show_my_board(data):
     my_board = json.loads(data)
     print("My board")
-    print(my_board)
+    show_board(my_board)
 
 
 @sio.event
 def show_enemy_board(data):
     enemy_board = json.loads(data)
     print("Enemy board")
-    print(enemy_board)
+    show_board(enemy_board)
 
 
 sio.connect('http://localhost:8080')
@@ -102,6 +103,22 @@ def choosing_game():
     elif game_or_join == "j":
         game_id = input("Provide game id to join\n")
         sio.emit("join_to_game", data=int(game_id))
+
+
+def show_board(board_in_json):
+    key_first_letter = None
+    lines = []
+    for key in board_in_json:
+        if key[0] is not key_first_letter:
+            key_first_letter = key[0]
+            lines.append([])
+        lines[-1].append(board_in_json[key])
+    top_line = "    "
+    for i in range(len(lines[0])):
+        top_line += str(i) + "    "
+    print(top_line)
+    for i in range(len(lines)):
+        print(LETTERS_MAP[i] + " " + str(lines[i]))
 
 
 if __name__ == '__main__':

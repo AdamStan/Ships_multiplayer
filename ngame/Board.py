@@ -51,7 +51,6 @@ VALUES_MAP = {
 
 class BoardExtended(Board):
     def __init__(self):
-        # TODO: A1 instead of 1,1
         super().__init__(BOARD_LENGTH, BOARD_WIDTH)
         self.initialize_ship()
 
@@ -74,10 +73,14 @@ class BoardExtended(Board):
         return json.dumps(dict_json)
 
     def fields_to_json_hide(self):
-        # TODO: hide ships
         dict_json = {}
         for row in range(0, len(self.getships())):
             for column in range(0, len(self.getships()[row])):
                 ship_type = self.getships()[row][column].tostring(row, column)
-                dict_json[LETTERS_MAP[row] + str(column)] = ship_type
+                type = "-"
+                if ship_type == "X" or ship_type == "H":
+                    type = ship_type
+                elif ship_type == "O":
+                    type = "O"
+                dict_json[LETTERS_MAP[row] + str(column)] = type
         return json.dumps(dict_json)

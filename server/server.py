@@ -59,7 +59,6 @@ async def shoot(sid, data):
 
     shoot_json = json.loads(data)
     correct_target, ship_hit = game.lets_shoot(sid, shoot_json['x'], int(shoot_json['y']))
-    print(game.board1.fields_to_json())
 
     print(ship_hit)
     await send_boards(game)
@@ -114,11 +113,13 @@ async def game_can_be_finished(game):
 
 async def send_boards(game):
     json_board_1 = game.board1.fields_to_json()
+    json_board_1_hidden = game.board1.fields_to_json_hide()
     json_board_2 = game.board2.fields_to_json()
+    json_board_2_hidden = game.board2.fields_to_json_hide()
     await sio.emit(event="show_my_board", data=json_board_1, room=game.socket_player_1)
-    await sio.emit(event="show_enemy_board", data=json_board_2, room=game.socket_player_1)
+    await sio.emit(event="show_enemy_board", data=json_board_2_hidden, room=game.socket_player_1)
     await sio.emit(event="show_my_board", data=json_board_2, room=game.socket_player_2)
-    await sio.emit(event="show_enemy_board", data=json_board_1, room=game.socket_player_2)
+    await sio.emit(event="show_enemy_board", data=json_board_1_hidden, room=game.socket_player_2)
 
 
 def find_game(sid):
